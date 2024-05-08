@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            background-color: snow;
+        }
+        h2 {
+            text-align: center;
+        }
+        .cont {
+            border-color: aqua;
+            display:flex;
+            margin: 10%;
+            margin-left: 35%;
+            margin-bottom: 15%;
+          padding:60px;
+          display: inline-block;
+          box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+          margin-right: 10%;
+                }
+
+    </style>
+    <title>CGPA calculator</title>
+</head>
+<body>
+    <div>
+    <h2>DEPARTMENT OF IT</h2>
+    <h2>SEM1 GPA CALCULATOR</h2>
+    </div>
+
+    <section class="cont">
+    <h1>UPLOAD YOUR SEM1 MARKSHEET PDF</h1>
+    
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".pdf">
+        <button type="submit">Check your CGPA</button>
+        <h2 id="gpasem1"></h2>
+    </form>
+</section>
+    <script>
+        // Function to calculate Semester 1 GPA
+        function calculatesem1(arrayOfArrays) {
+            var sem1 = arrayOfArrays[0];
+            let grade = [];
+            let res = [];
+            let temp = 0;
+
+            // Calculate grade and result for each subject
+            sem1.forEach(function (value) {
+                switch (value) {
+                    case "O":
+                        grade.push(10);
+                        break;
+                    case "A+":
+                        grade.push(9);
+                        break;
+                    case "A":
+                        grade.push(8);
+                        break;
+                    case "B+":
+                        grade.push(7);
+                        break;
+                    case "B":
+                        grade.push(6);
+                        break;
+                    case "C":
+                        grade.push(5);
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Calculate result for each subject
+            res.push(grade[0] * 4);
+            res.push(grade[1] * 4);
+            res.push(grade[2] * 3);
+            res.push(grade[3] * 3);
+            res.push(grade[4] * 3);
+            res.push(grade[5] * 2);
+            res.push(grade[6] * 2);
+
+            // Calculate total result
+            res.forEach(function (value) {
+                temp += value;
+            });
+
+            // Calculate Semester 1 GPA
+            var cgpa = temp / 21;
+
+            // Display Semester 1 GPA
+            document.getElementById("gpasem1").innerHTML = "Your GPA for Semester 1 is " + cgpa.toFixed(3);
+        }
+
+        // Listen for form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+
+            // Send form data to server
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Call function to calculate Semester 1 GPA with received data
+                calculatesem1(data.arrayOfArrays);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    
+    
+
+</body>
+</html>
+
+</body>
+</html>
